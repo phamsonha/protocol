@@ -76,6 +76,9 @@ describe('ABI Decoding Calldata', () => {
             expirationTimeSeconds: new BigNumber(1549498915),
             salt: new BigNumber(217),
         };
+        console.log (`**** makerAssetData: ${await contractWrappers.devUtils
+            .encodeERC20AssetData(defaultERC20MakerAssetAddress)
+            .callAsync()}*****`)
         orderRight = {
             makerAddress: makerAddressRight,
             makerAssetData: await contractWrappers.devUtils

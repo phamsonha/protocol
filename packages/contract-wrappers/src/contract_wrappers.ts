@@ -87,6 +87,7 @@ export class ContractWrappers {
             config.contractAddresses === undefined
                 ? _getDefaultContractAddresses(config.chainId)
                 : config.contractAddresses;
+        console.log (`contractAddress: ${contractAddresses}`)
         this.weth9 = new WETH9Contract(contractAddresses.etherToken, this.getProvider());
         this.exchange = new ExchangeContract(contractAddresses.exchange, this.getProvider());
         this.forwarder = new ForwarderContract(contractAddresses.forwarder, this.getProvider());

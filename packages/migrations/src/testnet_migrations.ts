@@ -1,4 +1,4 @@
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import { ContractAddresses, getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import {
     artifacts as assetProxyArtifacts,
     ChaiBridgeContract,
@@ -29,8 +29,10 @@ import { LogWithDecodedArgs, SupportedProvider, TxData } from 'ethereum-types';
 
 import { getConfigsByChainId } from './utils/configs_by_chain';
 import { constants } from './utils/constants';
-import { providerFactory } from './utils/provider_factory';
+import { providerFactory } from './utils/provider_factory2';
 import { getTimelockRegistrationsByChainId } from './utils/timelocks';
+import { runMigrationsOnceAsync } from './index';
+
 
 async function submitAndExecuteTransactionAsync(
     governor: ZeroExGovernorContract,
@@ -55,6 +57,7 @@ async function submitAndExecuteTransactionAsync(
 export async function runMigrationsAsync(supportedProvider: SupportedProvider, txDefaults: TxData): Promise<void> {
     const provider = providerUtils.standardizeOrThrow(supportedProvider);
     const chainId = new BigNumber(await providerUtils.getChainIdAsync(provider));
+    console.log (`chainId: ${chainId.toNumber()}`)
     const deployedAddresses = getContractAddressesForChainOrThrow(chainId.toNumber());
     const configs = getConfigsByChainId(chainId.toNumber());
 
@@ -277,10 +280,14 @@ export async function runMigrationsAsync(supportedProvider: SupportedProvider, t
 }
 
 (async () => {
-    const networkId = 1;
-    const rpcUrl = 'https://mainnet.infura.io/v3/';
-    const provider = await providerFactory.getLedgerProviderAsync(networkId, rpcUrl);
-    await runMigrationsAsync(provider, { from: '0x3b39078f2a3e1512eecc8d6792fdc7f33e1cd2cf', gasPrice: 10000000001 });
+    console.log ("Start testnet_migrations")
+    const networkId = 97;
+    const rpcUrl = 'https://bsc.getblock.io/testnet/?api_key=4c453762-efec-4819-9733-72be1d6ce1e4';
+    const provider = await providerFactory.getMnemonicProviderAsync(networkId, rpcUrl);
+    // await runMigrationsAsync(provider, { from: '0x753D9799e55852a9b86143E710EdE5510259fDb3', gasPrice: 10000000001 });
+    const txDefaults = { from: '0x753D9799e55852a9b86143E710EdE5510259fDb3', gasPrice: 10000000001 };
+    let contract = await runMigrationsOnceAsync (provider, txDefaults)
+    console.log (contract)
 })().catch(err => {
     logUtils.log(err);
     process.exit(1);
