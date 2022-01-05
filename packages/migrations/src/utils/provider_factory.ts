@@ -5,7 +5,7 @@ import Eth from '@ledgerhq/hw-app-eth';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import { Provider } from 'ethereum-types';
 export const BASE_DERIVATION_PATH = `44'/60'/0'/0`;
-export const MNEMONIC = "undo side eye minimum pistol obvious forest hurry primary expire fitness van";
+export const MNEMONIC = "concert load couple harbor equip island argue ramp clarify fence smart topic";
 
 async function ledgerEthereumNodeJsClientFactoryAsync(): Promise<LedgerEthereumClient> {
     const ledgerConnection = await TransportNodeHid.create();
